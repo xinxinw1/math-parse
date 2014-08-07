@@ -8,10 +8,12 @@ A math parser that works in both web js and Node.js.
 2. Go to https://github.com/xinxinw1/math-parse/releases and download the latest release.
 3. Extract `tools.js` from the first download and `math-parse.js` from the second download into your project directory.
 4. Add
+   
    ```html
    <script src="tools.js"></script>
    <script src="math-parse.js"></script>
    ```
+   
    to your html file.
 5. Run `$.al(Parser.prs("-2^(13-4)/3^3i*7"))` to make sure it works.
    (Should output
