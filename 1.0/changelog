@@ -1,0 +1,7 @@
+Math Parsing Library 1.0 - Jul 15, 2014 14:47
+
+- math parsing functions split off from complex-math
+- progn now has lower precedence than set
+- renames include
+    prepare -> prep
+    paresePrepared -> prs
