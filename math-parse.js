@@ -1,10 +1,11 @@
-/***** Math Parsing Library 1.0 *****/
+/***** Math Parsing Library 1.1.0 *****/
 
-/* require tools 4.0 */
-/* require prec-math 4.0 */
+/* require tools 4.1.5 */
 
-(function (win, udf){
+(function (udf){
   ////// Import //////
+  
+  var nodep = $.nodep;
   
   var str = String;
   
@@ -12,6 +13,7 @@
   
   var las = $.las;
   
+  var apl = $.apl;
   var map = $.map;
   var pos = $.pos;
   var has = $.has;
@@ -26,9 +28,9 @@
   var psh = $.psh;
   var att = $.att;
   
-  var err = $.err;
+  var stf = $.stf;
   
-  var log = PMath.log;
+  var err = $.err;
   
   ////// Predicates //////
   
@@ -230,14 +232,31 @@
     }
   }
   
+  ////// Logging //////
+  
+  var logger = function (subj, data){};
+  
+  function log(subj){
+    logger(subj + ": ", apl(stf, sli(arguments, 1)));
+  }
+  
+  function logfn(f){
+    return logger = f;
+  }
+  
   ////// Object exposure //////
   
-  win.PMath = att({
+  var Parser = {
     varp: varp,
     
     prep: prep,
     prs1: prs1,
-    prs: prs
-  }, PMath);
+    prs: prs,
+    
+    logfn: logfn
+  };
   
-})(window);
+  if (nodep)module.exports = Parser;
+  else window.Parser = Parser;
+  
+})();
