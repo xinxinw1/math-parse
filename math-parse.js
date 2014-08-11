@@ -1,4 +1,4 @@
-/***** Math Parsing Library 1.1.0 *****/
+/***** Math Parsing Library 1.2.0 *****/
 
 /* require tools 4.1.5 */
 
@@ -24,6 +24,9 @@
   var len = $.len;
   var sli = $.sli;
   var app = $.app;
+  
+  var each = $.each;
+  var mrem = $.mrem;
   
   var psh = $.psh;
   var att = $.att;
@@ -123,7 +126,7 @@
   
   function prsnum(a){
     var n = pos(",", a);
-    return ["num", sli(a, 1, n), sli(a, n+1, len(a)-1)];
+    return [sli(a, 1, n), sli(a, n+1, len(a)-1)];
   }
   
   // converts function expr -> lisp array
@@ -234,14 +237,21 @@
   
   ////// Logging //////
   
-  var logger = function (subj, data){};
+  var loggers = [];
   
   function log(subj){
-    logger(subj + ": ", apl(stf, sli(arguments, 1)));
+    var rst = sli(arguments, 1);
+    each(loggers, function (f){
+      f(subj, apl(stf, rst));
+    });
   }
   
   function logfn(f){
-    return logger = f;
+    psh(f, loggers);
+  }
+  
+  function rlogfn(f){
+    mrem(f, loggers);
   }
   
   ////// Object exposure //////
@@ -253,7 +263,8 @@
     prs1: prs1,
     prs: prs,
     
-    logfn: logfn
+    logfn: logfn,
+    rlogfn: rlogfn
   };
   
   if (nodep)module.exports = Parser;
