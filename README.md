@@ -62,7 +62,8 @@ prs(a)            return prs1(prep(a)); input math expr and output lisp array
 
 ### Logging
 
-logfn(a)          set logger callback; takes a function(subj, data);
+logfn(a)          add a logger callback; takes a function(subj, data);
                     use this if you want to catch intermediate outputs
                     during a run of prs(a)
+rlogfn(f)         remove a logging callback
 ```
