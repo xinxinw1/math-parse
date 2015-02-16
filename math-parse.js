@@ -67,6 +67,10 @@
     return a === "!";
   }
   
+  function pmp(a){
+    return a === "+" || a === "-";
+  }
+  
   ////// Parser //////
   
   // changes math expr into form processable by prs1
@@ -193,6 +197,7 @@
         if (higher(o, oper))return o + opnd2(a, oper, o, n+len(o));
         return "";
       }
+      if (pmp(o))return o + opnd2(a, oper, o, n+len(o));
       err(opnd2, "Object $1 before operator $2 in a = $3 can't be a non-factorial operator", las, o, a);
     }
     if (o == ""){
