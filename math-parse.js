@@ -1,4 +1,4 @@
-/***** Math Parsing Library 1.2.0 *****/
+/***** Math Parsing Library 1.3.0 *****/
 
 /* require tools 4.1.5 */
 
