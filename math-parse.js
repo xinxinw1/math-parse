@@ -1,6 +1,6 @@
-/***** Math Parsing Library 1.3.0 *****/
+/***** Math Parsing Library 1.4.0 *****/
 
-/* require tools 4.1.5 */
+/* require tools 4.10.3 */
 
 (function (udf){
   ////// Import //////
@@ -11,7 +11,7 @@
   
   var inp = $.inp;
   
-  var las = $.las;
+  var las = $.las_;
   
   var apl = $.apl;
   var map = $.map;
@@ -21,7 +21,7 @@
   var rpl = $.rpl;
   var mat = $.mat;
   
-  var len = $.len;
+  var len = $.len_;
   var sli = $.sli;
   var app = $.app;
   
@@ -29,7 +29,6 @@
   var mrem = $.mrem;
   
   var psh = $.psh;
-  var att = $.att;
   
   var stf = $.stf;
   
