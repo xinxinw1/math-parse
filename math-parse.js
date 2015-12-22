@@ -1,6 +1,8 @@
-/***** Math Parsing Library 1.4.0 *****/
+/***** Math Parsing Library 2.0.0 *****/
 
-/* require tools 4.10.3 */
+/* require tools 4.12.0 */
+/* require prec-math 5.0.0 */
+/* require cmpl-math 2.0.0 */
 
 (function (udf){
   ////// Import //////
@@ -28,11 +30,13 @@
   var each = $.each;
   var mrem = $.mrem;
   
-  var psh = $.psh;
+  var push = $.push;
   
   var stf = $.stf;
   
   var err = $.err;
+  
+  var mknum2 = C.mknum2;
   
   ////// Predicates //////
   
@@ -80,7 +84,7 @@
     if (ill != -1)err(prep, "Illegal character $1 in a = $2", ill, a);
     
     // replace "3i" and "5x" with "3*i" and "5*x"
-    a = rpl(/\b([0-9.]+)([a-zA-Z]+)\b/g, "($1*$2)", a);
+    a = rpl(/\b([0-9.]+)([a-zA-Z]+)\b/g, "$1*$2", a);
     a = rpl(/\b([0-9.]+)\b/g, "‘$1,0’", a); // real numbers
     a = rpl(/\bi\b/g, "‘0,1’", a); // imaginary numbers
     
@@ -129,7 +133,7 @@
   
   function prsnum(a){
     var n = pos(",", a);
-    return [sli(a, 1, n), sli(a, n+1, len(a)-1)];
+    return mknum2(sli(a, 1, n), sli(a, n+1, len(a)-1));
   }
   
   // converts function expr -> lisp array
@@ -146,12 +150,12 @@
         case "‘": n++; break;
         case "’": n--; break;
         case ",": if (b == 1 && n == 0){
-          psh(sli(a, las+1, i), args);
+          push(sli(a, las+1, i), args);
           las = i;
         }
       }
     }
-    if (a[las+1] != ")")psh(sli(a, las+1, len(a)-1), args);
+    if (a[las+1] != ")")push(sli(a, las+1, len(a)-1), args);
     return app([name], map(prs1, args));
   }
   
@@ -251,7 +255,7 @@
   }
   
   function logfn(f){
-    psh(f, loggers);
+    push(f, loggers);
   }
   
   function rlogfn(f){
