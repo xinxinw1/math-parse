@@ -1,13 +1,15 @@
-/***** Math Parsing Library 2.0.0 *****/
+/***** Math Parsing Library *****/
 
-/* require tools 4.12.0 */
-/* require prec-math 5.0.0 */
-/* require cmpl-math 2.0.0 */
+/* require tools */
+/* require prec-math */
+/* require cmpl-math */
 
 (function (udf){
   ////// Import //////
   
   var nodep = $.nodep;
+  
+  var udfp = $.udfp;
   
   var str = String;
   
@@ -92,7 +94,8 @@
   }
   
   // converts math expr -> lisp array
-  function prs(a){
+  function prs(a, log){
+    if (udfp(log))log = function (){};
     a = prep(a);
     log("Finish prep", "$1", a);
     a = prs1(a);
