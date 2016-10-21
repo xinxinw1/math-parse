@@ -8,4 +8,9 @@ QUnit.test('Parser', function (assert){
   assert.testdeep(Parser.prs("2^3^4"), ["pow", C.mknum("2"), ["pow", C.mknum("3"), C.mknum("4")]]);
   assert.testdeep(Parser.prs("2^-1"), ["pow", C.mknum("2"), ["sub", C.mknum("0"), C.mknum("1")]]);
   assert.testdeep(Parser.prs("2^-1!"), ["pow", C.mknum("2"), ["sub", C.mknum("0"), ["fact", C.mknum("1")]]]);
+  assert.testdeep(Parser.prs("f(x)(y)"), [["f", "x"], "y"]);
+  assert.testdeep(Parser.prs("a+f(x)(y)"), ["add", "a", [["f", "x"], "y"]]);
+  assert.testdeep(Parser.prs("(a, b)(y)"), [["progn", "a", "b"], "y"]);
+  assert.testdeep(Parser.prs("a*b = c"), ["set", ["mul", "a", "b"], "c"]);
+  assert.testdeep(Parser.prs("f(x) = g(y) = x+y"), ["set", ["f", "x"], ["set", ["g", "y"], ["add", "x", "y"]]]);
 });

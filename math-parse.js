@@ -47,11 +47,6 @@
     return a[0] == "(" && las(a) == ")";
   }
   
-  function fnp(a){
-    if (len(a) == 0)return false;
-    return has(/^[a-zA-Z0-9]+\(/, a) && las(a) == ")";
-  }
-  
   function nump(a){
     return has(/^‘[0-9.]+,[0-9.]+’$/, a);
   }
@@ -114,7 +109,6 @@
     if (nump(o))return prs2(a, prsnum(o), len(o));
     if (varp(o))return prs2(a, o, len(o));
     if (bracp(o))return prs2(a, prs1(sli(o, 1, len(o)-1)), len(o));
-    if (fnp(o))return prs2(a, prsfn(o), len(o));
     if (o == "")return "";
     err(prs1, "Unknown object $1 in a = $2", o, a);
   }
@@ -127,6 +121,10 @@
       var opn = opnd(a, n);
       return prs2(a, [word(o), bef, prs1(opn)], n+len(o)+len(opn));
     }
+    // function application
+    if (bracp(o)){
+      return prs2(a, app([bef], prsargs(o)), n+len(o));
+    }
     err(prs2, "Object $1 in a = $2 not an operator", o, a);
   }
   
@@ -135,14 +133,14 @@
     return mknum2(sli(a, 1, n), sli(a, n+1, len(a)-1));
   }
   
-  // converts function expr -> lisp array
-  function prsfn(a){
+  // converts arg expr "(1, 2, 3)" -> array [<1>, <2>, <3>]
+  function prsargs(a){
     var name = sli(a, 0, pos("(", a));
     var args = [];
     var b = 1; // bracket level
     var n = 0; // number level
-    var las = pos("(", a);
-    for (var i = las+1; i < len(a)-1; i++){
+    var las = 0; // end of last arg
+    for (var i = 1; i < len(a)-1; i++){
       switch (a[i]){
         case "(": b++; break;
         case ")": b--; break;
@@ -154,8 +152,9 @@
         }
       }
     }
+    // if a != "()"
     if (a[las+1] != ")")push(sli(a, las+1, len(a)-1), args);
-    return app([name], map(prs1, args));
+    return map(prs1, args);
   }
   
   // gets the object starting at pos
@@ -165,9 +164,9 @@
     
     if (a[0] == "‘")return mat(/^‘[0-9.]+,[0-9.]+’/, a);
     if (operp(a[0]))return a[0];
-    if (has(/^[a-zA-Z0-9]*\(/, a)){ // Brackets and Functions
+    if (a[0] == "("){ // Brackets
       var lvl = 1;
-      for (var i = pos("(", a)+1; i < len(a); i++){
+      for (var i = 1; i < len(a); i++){
         if (a[i] == "(")lvl++;
         else if (a[i] == ")")lvl--;
         if (lvl == 0)return sli(a, 0, i+1);
@@ -187,11 +186,14 @@
   
   function opnd2(a, oper, las, n){
     var o = obj(a, n);
-    if (nump(o) || bracp(o) || fnp(o) || varp(o)){
+    if (nump(o) || varp(o)){
       if (operp(las) && !factp(las)){
         return o + opnd2(a, oper, o, n+len(o));
       }
       err(opnd2, "Object $1 before $2 in a = $3 must be a non-factorial operator", las, o, a);
+    }
+    if (bracp(o)){
+      return o + opnd2(a, oper, o, n+len(o));
     }
     if (operp(o)){
       if (!operp(las) || factp(las)){
