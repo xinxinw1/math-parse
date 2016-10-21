@@ -115,10 +115,6 @@
     if (varp(o))return prs2(a, o, len(o));
     if (bracp(o))return prs2(a, prs1(sli(o, 1, len(o)-1)), len(o));
     if (fnp(o))return prs2(a, prsfn(o), len(o));
-    if (equp(o)){
-      var equ = pos("=", o);
-      return prs2(a, sli(o, 0, equ), equ);
-    }
     if (o == "")return "";
     err(prs1, "Unknown object $1 in a = $2", o, a);
   }
@@ -178,7 +174,6 @@
       }
       err(obj, "Brackets not matched in a = $1", a);
     }
-    if (has(/^[a-zA-Z0-9]+=/, a))return a;
     if (has(/^[a-zA-Z0-9]+/, a))return mat(/^[a-zA-Z0-9]+/, a);
     err(obj, "Char $1 in a = $2 not a number or operator", a[0], a);
   }
@@ -192,7 +187,7 @@
   
   function opnd2(a, oper, las, n){
     var o = obj(a, n);
-    if (nump(o) || bracp(o) || fnp(o) || varp(o) || equp(o)){
+    if (nump(o) || bracp(o) || fnp(o) || varp(o)){
       if (operp(las) && !factp(las)){
         return o + opnd2(a, oper, o, n+len(o));
       }
@@ -215,6 +210,7 @@
   
   function higher(a, b){
     if (a == "^" && b == "^")return true;
+    if (a == "=" && b == "=")return true;
     return level(a) > level(b);
   }
   
